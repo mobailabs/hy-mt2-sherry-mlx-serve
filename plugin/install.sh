@@ -80,8 +80,14 @@ else
     mkdir -p "$ZIG_DIR"
     tmp="$(mktemp -d)"
     trap 'rm -rf "$tmp"' EXIT
-    curl -fsSL "https://ziglang.org/download/$ZIG_VERSION/zig-$ZIG_ARCH-$ZIG_VERSION.tar.xz" -o "$tmp/zig.tar.xz" \
-      || die "could not download Zig; install $ZIG_VERSION by hand and re-run"
+    zig_ok=no
+    for attempt in 1 2 3 4 5; do
+      curl -fsSL --max-time 300 "https://ziglang.org/download/$ZIG_VERSION/zig-$ZIG_ARCH-$ZIG_VERSION.tar.xz" \
+        -o "$tmp/zig.tar.xz" && zig_ok=yes && break
+      say "Zig download failed (attempt $attempt), retrying"
+      sleep 5
+    done
+    [ "$zig_ok" = yes ] || die "could not download Zig; install $ZIG_VERSION by hand and put it on PATH, then re-run"
     tar -xJf "$tmp/zig.tar.xz" -C "$tmp"
     cp -R "$tmp/zig-$ZIG_ARCH-$ZIG_VERSION/." "$ZIG_DIR/"
   fi
