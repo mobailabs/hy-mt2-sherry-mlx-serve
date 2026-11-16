@@ -1,0 +1,8 @@
+# Build output and staged toolchain (fetched by plugin/install.sh)
+.kit/
+.zig-toolchain/
+.zig-cache/
+zig-out/
+*.dylib
+
+.DS_Store
