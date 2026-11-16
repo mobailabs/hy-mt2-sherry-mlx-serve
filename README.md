@@ -37,9 +37,11 @@ The log must show `[plugin] hy_mt2_sherry serves hunyuan_v1_dense (32 layers)`.
 
 ## Let an AI do it
 
-[`PROMPT.md`](PROMPT.md) is a self-contained instruction file: hand it to a coding agent on the target Mac and it
-installs, verifies, and reports — including the failure modes (kit download 504s, MLX pin mismatch, plugins disabled)
-and how to resolve each.
+Hand the agent one of these on the target Mac:
+
+- **[`INSTALL.md`](INSTALL.md)** — the runbook: numbered steps, a **Check** after every one, a table of failure modes
+  with the exact fix, three acceptance tests, and a fixed report format. Use this by default.
+- [`PROMPT.md`](PROMPT.md) — the same job in prompt form, for tools that prefer a task statement over a runbook.
 
 ## Performance
 
@@ -62,7 +64,8 @@ Apple M5 Max, greedy, `--no-pld`, idle machine:
 ## Layout
 
 ```
-PROMPT.md              instructions for an AI agent (install + verify + report)
+INSTALL.md             runbook for an AI agent: steps, checks, failure fixes, report format
+PROMPT.md              the same job as a prompt
 plugin/                the plugin package
   install.sh           the installer (local + kit download + pin check + build + conformance)
   plugin.zig           forward, the three Metal kernels, weight loading, the bill
