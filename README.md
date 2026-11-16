@@ -13,9 +13,43 @@ Both are `hunyuan_v1_dense` with llama.cpp **STQ1_0** projections (`qs` / `sign`
 and a 6-bit affine embedding. The plugin ports the pack's model code and its Metal kernels; mlx-serve keeps the
 tokenizer, chat template, sampling, KV cache, prefix cache, batching and HTTP APIs.
 
-## Install
+## Let an AI do it
+
+> **Copy this to an AI** (Claude Code, Codex, OpenCode, Cursor, …) and it installs and verifies.
+> Run it **on the Mac you are installing to**, not somewhere else.
+>
+> ```
+> You are installing the hy_mt2_sherry plugin for mlx-serve on this Mac.
+>
+> Follow https://raw.githubusercontent.com/mobailabs/hy-mt2-sherry-mlx-serve/main/INSTALL.md
+> exactly, step by step. If you cannot fetch that URL, use this fallback:
+> https://github.com/mobailabs/hy-mt2-sherry-mlx-serve (clone it, then read INSTALL.md).
+>
+> Rules:
+> - Do not skip the Checks. Do not report success unless all three checks in Step 5 pass.
+> - Report exactly what you observed, in the format Step 6 specifies.
+> - If a step fails and INSTALL.md has no fix for it, stop and report the exact command,
+>   its output, and the exit code.
+> ```
+
+[`INSTALL.md`](INSTALL.md) is the runbook the agent follows: numbered steps, a **Check** after each, a failure table
+mapping output to fix, three acceptance tests, and a fixed report format. [`PROMPT.md`](PROMPT.md) is the same job as
+a prompt, for tools that prefer a task statement.
+
+## Install manually
 
 Apple Silicon macOS, mlx-serve **26.11.1 or newer**.
+
+```bash
+TAG="$(curl -fsSL https://api.github.com/repos/mobailabs/hy-mt2-sherry-mlx-serve/releases/latest \
+       | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])')"
+curl -fsSL -o hy-mt2.tar.gz \
+  "https://github.com/mobailabs/hy-mt2-sherry-mlx-serve/releases/download/$TAG/hy-mt2-sherry-mlx-serve-$TAG.tar.gz"
+tar -xzf hy-mt2.tar.gz && cd hy-mt2-sherry-mlx-serve
+./plugin/install.sh
+```
+
+Or from git:
 
 ```bash
 git clone https://github.com/mobailabs/hy-mt2-sherry-mlx-serve
@@ -34,14 +68,6 @@ mlx-serve --serve --model ~/.mlx-serve/models/Sube126/Hy-MT2-1.8B-1.25Bit-MLX
 ```
 
 The log must show `[plugin] hy_mt2_sherry serves hunyuan_v1_dense (32 layers)`.
-
-## Let an AI do it
-
-Hand the agent one of these on the target Mac:
-
-- **[`INSTALL.md`](INSTALL.md)** — the runbook: numbered steps, a **Check** after every one, a table of failure modes
-  with the exact fix, three acceptance tests, and a fixed report format. Use this by default.
-- [`PROMPT.md`](PROMPT.md) — the same job in prompt form, for tools that prefer a task statement over a runbook.
 
 ## Performance
 

@@ -88,18 +88,21 @@ Otherwise, prefer the release tarball (no git needed):
 
 ```bash
 cd ~
+# `latest` always resolves to the current release; the asset name matches the tag it points at.
+TAG="$(curl -fsSL https://api.github.com/repos/mobailabs/hy-mt2-sherry-mlx-serve/releases/latest \
+        | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])')"
+echo "release $TAG"
 curl -fsSL -o hy-mt2.tar.gz \
-  https://github.com/mobailabs/hy-mt2-sherry-mlx-serve/releases/download/v0.1.1/hy-mt2-sherry-mlx-serve-v0.1.1.tar.gz
+  "https://github.com/mobailabs/hy-mt2-sherry-mlx-serve/releases/download/$TAG/hy-mt2-sherry-mlx-serve-$TAG.tar.gz"
 tar -xzf hy-mt2.tar.gz
 cd hy-mt2-sherry-mlx-serve
 ```
 
 **Check:** `ls plugin/plugin.zig plugin/install.sh` succeeds.
 
-- If `curl` fails with 404: the tag moved. Fall back to git:
+- If `curl` fails with 404 or the release lookup fails: fall back to git:
   `git clone https://github.com/mobailabs/hy-mt2-sherry-mlx-serve && cd hy-mt2-sherry-mlx-serve`.
-- Optional integrity check:
-  `shasum -a 256 hy-mt2.tar.gz` should be `f5075306cb1571db4d62d8f90dd83d21ac07d708b1e994e9860125e87c170aad`.
+- Optional integrity check: `shasum -a 256 hy-mt2.tar.gz` should equal the digest on the release page.
 
 ---
 
